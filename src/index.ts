@@ -20,6 +20,8 @@ import {
     ZonedDateTime
 } from "@internationalized/date";
 import dayjs from "dayjs";
+import { addDays, getYear, getDay, getMonth, getHours, getMinutes, getSeconds, parse } from "date-fns";
+import * as dateFns from "date-fns";
 
 const testInternationalizedDate = (name: string, cb: () => void) => {
     console.group("@internationalized/date:" + name);
@@ -53,6 +55,15 @@ testDayjs("immutable", () => {
         next: next.toISOString()
     });
 });
+testDateFns("immutable", () => {
+    const current = new Date();
+    const next = new Date(current);
+    next.setDate(current.getDate() + 1);
+    console.log({
+        current: current.toISOString(),
+        next: next.toISOString()
+    });
+});
 // add/sub
 const currentTimeZone = "Asia/Tokyo";
 testInternationalizedDate("add/sub", () => {
@@ -81,6 +92,14 @@ testDayjs("add/sub", () => {
         subed: subed.toISOString()
     });
 });
+testDateFns("add/sub", () => {
+    const current = new Date();
+    const added = addDays(current, 1);
+    console.log({
+        current: current.toISOString(),
+        added: added.toISOString()
+    });
+});
 // get value
 testInternationalizedDate("get", () => {
     const current = now(currentTimeZone);
@@ -102,6 +121,17 @@ testDayjs("get", () => {
         hour: current.hour(),
         minute: current.minute(),
         second: current.second()
+    });
+});
+testDateFns("get", () => {
+    const current = new Date();
+    console.log({
+        year: getYear(current),
+        month: getMonth(current),
+        day: getDay(current),
+        hour: getHours(current),
+        minute: getMinutes(current),
+        second: getSeconds(current)
     });
 });
 // parse
@@ -131,6 +161,15 @@ testDayjs("parse", () => {
         parsedDateTime: parsedDateTime.toISOString()
     });
 });
+testDateFns("parse", () => {
+    // date
+    const parsedDate = parse("2021-01-01", "yyyy-MM-dd", new Date());
+    const parsedDateTime = parse("2021-01-01T12:00:00", "yyyy-MM-dd'T'HH:mm:ss", new Date());
+    console.log({
+        parsedDate: parsedDate.toISOString(),
+        parsedDateTime: parsedDateTime.toISOString()
+    });
+});
 // endOf/startOf
 testInternationalizedDate("startOf/endOf", () => {
     const current = now(currentTimeZone);
@@ -143,7 +182,6 @@ testInternationalizedDate("startOf/endOf", () => {
         endOfWeek: endOfWeek(current, "ja-JP").toString()
     });
 });
-
 testDayjs("startOf/endOf", () => {
     const current = dayjs();
     console.log({
@@ -155,6 +193,18 @@ testDayjs("startOf/endOf", () => {
         endOfWeek: current.endOf("week").toISOString()
     });
 });
+testDateFns("startOf/endOf", () => {
+    const current = new Date();
+    console.log({
+        startOfYear: dateFns.startOfYear(current).toISOString(),
+        endOfYear: dateFns.endOfYear(current).toISOString(),
+        startOfMonth: dateFns.startOfMonth(current).toISOString(),
+        endOfMonth: dateFns.endOfMonth(current).toISOString(),
+        startOfWeek: dateFns.startOfWeek(current).toISOString(),
+        endOfWeek: dateFns.endOfWeek(current).toISOString()
+    });
+});
+
 // format
 testInternationalizedDate("format", () => {
     const current = now(currentTimeZone);
@@ -202,20 +252,44 @@ testDayjs("query", () => {
         compare2: target1.diff(target2)
     });
 });
+testDateFns("query", () => {
+    const current = new Date();
+    const target1 = new Date("2021-01-01");
+    const target2 = new Date("2021-01-02");
+    console.log({
+        isSameDay: dateFns.isSameDay(current, target1),
+        isSameYear: dateFns.isSameYear(current, target1),
+        isSameMonth: dateFns.isSameMonth(current, target1),
+        isEqualDay: dateFns.isEqual(current, target1),
+        isEqualMonth: dateFns.isEqual(current, target1),
+        compare: dateFns.compareAsc(current, target1),
+        compare2: dateFns.compareAsc(target1, target2)
+    });
+});
+
 // format - YYYY-MM-DD
 testInternationalizedDate("format - YYYY-MM-DD", () => {
     // format is YYYY-MM-DD
-    const formatDate = (date: ZonedDateTime, format:string) => {
-
-    };
     const current = now(currentTimeZone);
+    const formatYYYYMMDD = (date: ZonedDateTime) => {
+        // YYYY-MM-DD
+        return `${date.year}-${String(date.month).padStart(2, "0")}-${String(date.day).padStart(2, "0")}`;
+    };
     console.log({
-        formatted: toCalendarDate(current).toString()
+        YYYYMMDD: toCalendarDate(current).toString(),
+        formatted: formatYYYYMMDD(current)
     });
 });
 testDayjs("format - YYYY-MM-DD", () => {
     const current = dayjs();
     console.log({
         formatted: current.format("YYYY-MM-DD")
+    });
+});
+
+testDateFns("format - YYYY-MM-DD", () => {
+    const current = new Date();
+    console.log({
+        formatted: dateFns.format(current, "yyyy-MM-dd")
     });
 });

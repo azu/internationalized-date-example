@@ -13,9 +13,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "run": "tsx src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\""
+    "test": "tsx src/index.ts"
   },
   "description": "",
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
