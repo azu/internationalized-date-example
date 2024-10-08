@@ -16,9 +16,10 @@
     "test": "tsx src/index.ts"
   },
   "description": "",
-  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610",
+  "packageManager": "npm@10.9.0+sha256.c12def16fe3efdc80b1e652d60903d807ac4b78b9e7c3e76f633f4b13a32897c",
   "devDependencies": {
     "@types/node": "^22.7.4",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
